@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -57,7 +56,66 @@ autofocus
 
 <div id="results"></div>
 
+<script>
+
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyFI-CdMeqEh44ABzrbLZBKIrphuLTJZmK7qbmNqcjFDBfT_hSwroTYen9mkpM7yMhvdg/exec";
+
+const searchBox = document.getElementById("search");
+const results = document.getElementById("results");
+
+let dictionary = [];
+
+fetch(GAS_URL)
+.then(response => response.json())
+.then(data => {
+
+dictionary = data;
+
+showResults("");
+
+});
+
+function showResults(word){
+
+results.innerHTML = "";
+
+dictionary.forEach(item => {
+
+if(
+word === "" ||
+String(item.issue).includes(word) ||
+String(item.number).includes(word) ||
+item.jp.includes(word) ||
+item.mn.toLowerCase().includes(word.toLowerCase())
+){
+
+results.innerHTML += `
+<div class="result">
+
+<div>号：${item.issue}　首：${item.number}</div>
+
+<div class="jp">${item.jp}</div>
+
+<div class="mn">${item.mn}</div>
+
+</div>
+`;
+
+}
+
+});
+
+}
+
+searchBox.addEventListener("input", function(){
+
+const word = this.value.trim();
+
+showResults(word);
+
+});
+
+</script>
 </body>
 
 </html>
-```
