@@ -57,7 +57,29 @@ margin-top:6px;
 color:#555;
 margin-top:4px;
 }
+  
+.searchArea{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+}
 
+.searchArea input{
+flex:1;
+margin-bottom:0;
+}
+
+#searchButton{
+padding:12px 20px;
+font-size:18px;
+background:#4285f4;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+white-space:nowrap;
+}
+  
 </style>
 
 </head>
@@ -66,6 +88,10 @@ margin-top:4px;
 
 <h2>おふでさき コーパス</h2>
 
+<div class="searchArea">
+
+<button id="searchButton">検索</button>
+
 <input
 id="search"
 type="text"
@@ -73,7 +99,7 @@ placeholder="検索"
 autofocus
 >
 
-<button id="searchButton">検索</button>
+</div>
 
 <div id="results"></div>
 
