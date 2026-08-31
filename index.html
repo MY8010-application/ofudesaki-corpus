@@ -80,12 +80,25 @@ const results = document.getElementById("results");
 let corpus = [];
 
 fetch("corpus.json")
-.then(response => response.json())
+.then(response => {
+
+if(!response.ok){
+throw new Error("JSONの取得に失敗");
+}
+
+return response.json();
+
+})
 .then(data => {
 
 corpus = data;
 
 results.innerHTML = "データ読み込み完了：" + corpus.length + "件";
+
+})
+.catch(error => {
+
+results.innerHTML = "データ読み込みエラー";
 
 });
 
