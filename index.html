@@ -74,36 +74,34 @@ autofocus
 
 <script>
 
-const GAS_URL = "https://script.google.com/macros/s/AKfycbyFI-CdMeqEh44ABzrbLZBKIrphuLTJZmK7qbmNqcjFDBfT_hSwroTYen9mkpM7yMhvdg/exec";
-
 const searchBox = document.getElementById("search");
 const results = document.getElementById("results");
 
-let dictionary = [];
+let corpus = [];
 
-fetch(GAS_URL)
+fetch("corpus.json")
 .then(response => response.json())
 .then(data => {
 
-dictionary = data;
-
-showResults("");
+corpus = data;
 
 });
 
-function showResults(word){
+searchBox.addEventListener("input", function(){
+
+const word = this.value.trim().toLowerCase();
 
 results.innerHTML = "";
 
 if(word === "") return;
 
-dictionary.forEach(item => {
+corpus.forEach(item => {
 
 if(
 String(item.issue).includes(word) ||
 String(item.number).includes(word) ||
-item.jp.includes(word) ||
-item.mn.toLowerCase().includes(word.toLowerCase())
+item.jp.toLowerCase().includes(word) ||
+item.mn.toLowerCase().includes(word)
 ){
 
 results.innerHTML += `
@@ -121,14 +119,6 @@ results.innerHTML += `
 }
 
 });
-
-}
-
-searchBox.addEventListener("input", function(){
-
-const word = this.value.trim();
-
-showResults(word);
 
 });
 
