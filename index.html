@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 
 <head>
@@ -6,9 +7,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>おふでさき 日モ　コーパス</title>
-<span>更新時2026.08.31</span>
+<title>おふでさき コーパス</title>
 <link rel="manifest" href="manifest.json">
+
 <style>
 
 *{
@@ -69,6 +70,7 @@ id="search"
 type="text"
 placeholder="検索"
 autofocus
+
 >
 
 <div id="results"></div>
@@ -79,6 +81,8 @@ const searchBox = document.getElementById("search");
 const results = document.getElementById("results");
 
 let corpus = [];
+let filteredResults = [];
+let displayCount = 15;
 
 fetch("corpus.json")
 .then(response => {
@@ -87,47 +91,22 @@ if(!response.ok){
 throw new Error("JSONの取得に失敗");
 }
 
-return response.text();
+return response.json();
 
 })
-.then(text => {
-
-try{
-
-const data = JSON.parse(text);
+.then(data => {
 
 corpus = data;
 
-results.innerHTML = "JSON解析成功：" + corpus.length + "件";
-
-}catch(error){
-
-results.innerHTML = "JSON解析エラー：" + error.message;
-
-}
-
-})
-.catch(error => {
-
-results.innerHTML = "データ読み込みエラー";
-
 });
-searchBox.addEventListener("input", function(){
 
-const word = this.value.trim().toLowerCase();
+function showResults(){
 
 results.innerHTML = "";
 
-if(word === "") return;
+const displayResults = filteredResults.slice(0, displayCount);
 
-corpus.forEach(item => {
-
-if(
-String(item.issue).includes(word) ||
-String(item.number).includes(word) ||
-String(item.jp).toLowerCase().includes(word) ||
-String(item.mn).toLowerCase().includes(word)
-){
+displayResults.forEach(item => {
 
 results.innerHTML += `
 <div class="result">
@@ -141,14 +120,54 @@ results.innerHTML += `
 </div>
 `;
 
+});
+
+if(displayCount < filteredResults.length){
+
+results.innerHTML += `
+<button id="moreButton">続きを表示</button>
+`;
+
+document.getElementById("moreButton").addEventListener("click", function(){
+
+displayCount += 15;
+
+showResults();
+
+});
+
 }
 
-});
+}
+
+searchBox.addEventListener("input", function(){
+
+const word = this.value.trim().toLowerCase();
+
+displayCount = 15;
+
+if(word === ""){
+
+filteredResults = [];
+
+results.innerHTML = "";
+
+return;
+
+}
+
+filteredResults = corpus.filter(item =>
+
+String(item.issue).includes(word) ||
+String(item.number).includes(word) ||
+String(item.jp).toLowerCase().includes(word) ||
+String(item.mn).toLowerCase().includes(word)
+
+);
+
+showResults();
 
 });
-
-</script>
-<script>
 
 if ("serviceWorker" in navigator) {
 
@@ -161,6 +180,7 @@ navigator.serviceWorker.register("./service-worker.js");
 }
 
 </script>
+
 </body>
 
 </html>
