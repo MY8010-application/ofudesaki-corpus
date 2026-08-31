@@ -85,6 +85,8 @@ fetch("corpus.json")
 
 corpus = data;
 
+results.innerHTML = "データ読み込み完了：" + corpus.length + "件";
+
 });
 
 searchBox.addEventListener("input", function(){
