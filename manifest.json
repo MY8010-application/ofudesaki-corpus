@@ -1,0 +1,9 @@
+{
+  "name": "おふでさき コーパス",
+  "short_name": "おふでさき",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "description": "おふでさき 日本語・モンゴル語コーパス"
+}
