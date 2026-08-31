@@ -91,7 +91,19 @@ return response.text();
 })
 .then(text => {
 
-results.innerHTML = "JSON読み込み完了：" + text.length + "文字";
+try{
+
+const data = JSON.parse(text);
+
+corpus = data;
+
+results.innerHTML = "JSON解析成功：" + corpus.length + "件";
+
+}catch(error){
+
+results.innerHTML = "JSON解析エラー";
+
+}
 
 })
 .catch(error => {
@@ -99,7 +111,6 @@ results.innerHTML = "JSON読み込み完了：" + text.length + "文字";
 results.innerHTML = "データ読み込みエラー";
 
 });
-
 searchBox.addEventListener("input", function(){
 
 const word = this.value.trim().toLowerCase();
