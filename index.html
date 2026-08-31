@@ -100,8 +100,8 @@ corpus.forEach(item => {
 if(
 String(item.issue).includes(word) ||
 String(item.number).includes(word) ||
-item.jp.toLowerCase().includes(word) ||
-item.mn.toLowerCase().includes(word)
+String(item.jp).toLowerCase().includes(word) ||
+String(item.mn).toLowerCase().includes(word)
 ){
 
 results.innerHTML += `
