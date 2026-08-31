@@ -168,9 +168,9 @@ showResults();
 
 }
 
-searchBox.addEventListener("input", function(){
+document.getElementById("searchButton").addEventListener("click", function(){
 
-const word = this.value.trim().toLowerCase();
+const word = searchBox.value.trim().toLowerCase();
 
 displayCount = 15;
 
@@ -196,7 +196,7 @@ String(item.mn).toLowerCase().includes(word)
 showResults();
 
 });
-
+  
 if ("serviceWorker" in navigator) {
 
 window.addEventListener("load", () => {
