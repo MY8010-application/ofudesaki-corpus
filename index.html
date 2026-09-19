@@ -249,7 +249,19 @@ String(item.issue).includes(mnWord) ||
 String(item.number).includes(mnWord) ||
 String(item.mn).toLowerCase().includes(mnWord);
 
+if(jpWord !== "" && mnWord === ""){
+return jpMatch;
+}
+
+if(jpWord === "" && mnWord !== ""){
+return mnMatch;
+}
+
+if(jpWord !== "" && mnWord !== ""){
 return jpMatch && mnMatch;
+}
+
+return false;
 
 });
 
