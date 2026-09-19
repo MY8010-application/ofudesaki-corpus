@@ -33,7 +33,6 @@ margin-bottom:20px;
 }
 
 input{
-width:100%;
 padding:12px;
 font-size:18px;
 margin-bottom:20px;
@@ -135,10 +134,16 @@ font-size:14px;
 <button id="searchButton">検索</button>
 
 <input
-id="search"
+id="searchJp"
 type="text"
-placeholder="検索"
+placeholder="日本語で検索"
 autofocus
+>
+
+<input
+id="searchMn"
+type="text"
+placeholder="モンゴル語で検索"
 >
 
 </div>
@@ -147,9 +152,10 @@ autofocus
 
 <script>
 
-const searchBox = document.getElementById("search");
+const searchJp = document.getElementById("searchJp");
+const searchMn = document.getElementById("searchMn");
 const results = document.getElementById("results");
-
+  
 let corpus = [];
 let filteredResults = [];
 let displayCount = 15;
@@ -212,11 +218,12 @@ showResults();
 
 document.getElementById("searchButton").addEventListener("click", function(){
 
-const word = searchBox.value.trim().toLowerCase();
+const jpWord = searchJp.value.trim().toLowerCase();
+const mnWord = searchMn.value.trim().toLowerCase();
 
 displayCount = 15;
 
-if(word === ""){
+if(jpWord === "" && mnWord === ""){
 
 filteredResults = [];
 
@@ -226,19 +233,38 @@ return;
 
 }
 
-filteredResults = corpus.filter(item =>
+filteredResults = corpus.filter(item => {
 
-String(item.issue).includes(word) ||
-String(item.number).includes(word) ||
-String(item.jp).toLowerCase().includes(word) ||
-String(item.mn).toLowerCase().includes(word)
+const jpMatch =
+jpWord === "" ||
+String(item.issue).includes(jpWord) ||
+String(item.number).includes(jpWord) ||
+String(item.jp).toLowerCase().includes(jpWord);
 
-);
+const mnMatch =
+mnWord === "" ||
+String(item.issue).includes(mnWord) ||
+String(item.number).includes(mnWord) ||
+String(item.mn).toLowerCase().includes(mnWord);
+
+return jpMatch && mnMatch;
+
+});
 
 showResults();
 
 });
-searchBox.addEventListener("keydown", function(event){
+searchJp.addEventListener("keydown", function(event){
+
+if(event.key === "Enter"){
+
+document.getElementById("searchButton").click();
+
+}
+
+});
+
+searchMn.addEventListener("keydown", function(event){
 
 if(event.key === "Enter"){
 
