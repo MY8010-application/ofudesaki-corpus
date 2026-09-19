@@ -33,6 +33,7 @@ margin-bottom:20px;
 }
 
 input{
+width:100%;
 padding:12px;
 font-size:18px;
 margin-bottom:20px;
@@ -134,16 +135,10 @@ font-size:14px;
 <button id="searchButton">検索</button>
 
 <input
-id="searchJp"
+id="search"
 type="text"
-placeholder="日本語で検索"
+placeholder="検索"
 autofocus
->
-
-<input
-id="searchMn"
-type="text"
-placeholder="モンゴル語で検索"
 >
 
 </div>
@@ -152,10 +147,9 @@ placeholder="モンゴル語で検索"
 
 <script>
 
-const searchJp = document.getElementById("searchJp");
-const searchMn = document.getElementById("searchMn");
+const searchBox = document.getElementById("search");
 const results = document.getElementById("results");
-  
+
 let corpus = [];
 let filteredResults = [];
 let displayCount = 15;
@@ -173,8 +167,6 @@ return response.json();
 .then(data => {
 
 corpus = data;
-
-results.innerHTML = "データ読み込み完了：" + corpus.length + "件";
 
 });
 
@@ -220,12 +212,11 @@ showResults();
 
 document.getElementById("searchButton").addEventListener("click", function(){
 
-const jpWord = searchJp.value.trim().toLowerCase();
-const mnWord = searchMn.value.trim().toLowerCase();
+const word = searchBox.value.trim().toLowerCase();
 
 displayCount = 15;
 
-if(jpWord === "" && mnWord === ""){
+if(word === ""){
 
 filteredResults = [];
 
@@ -235,50 +226,19 @@ return;
 
 }
 
-filteredResults = corpus.filter(item => {
+filteredResults = corpus.filter(item =>
 
-const jpMatch =
-jpWord === "" ||
-String(item.issue).includes(jpWord) ||
-String(item.number).includes(jpWord) ||
-String(item.jp).toLowerCase().includes(jpWord);
+String(item.issue).includes(word) ||
+String(item.number).includes(word) ||
+String(item.jp).toLowerCase().includes(word) ||
+String(item.mn).toLowerCase().includes(word)
 
-const mnMatch =
-mnWord === "" ||
-String(item.issue).includes(mnWord) ||
-String(item.number).includes(mnWord) ||
-String(item.mn).toLowerCase().includes(mnWord);
-
-if(jpWord !== "" && mnWord === ""){
-return jpMatch;
-}
-
-if(jpWord === "" && mnWord !== ""){
-return mnMatch;
-}
-
-if(jpWord !== "" && mnWord !== ""){
-return jpMatch && mnMatch;
-}
-
-return false;
-
-});
+);
 
 showResults();
 
 });
-searchJp.addEventListener("keydown", function(event){
-
-if(event.key === "Enter"){
-
-document.getElementById("searchButton").click();
-
-}
-
-});
-
-searchMn.addEventListener("keydown", function(event){
+searchBox.addEventListener("keydown", function(event){
 
 if(event.key === "Enter"){
 
