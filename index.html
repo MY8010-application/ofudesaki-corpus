@@ -132,14 +132,20 @@ font-size:14px;
 
 <div class="searchArea">
 
-<button id="searchButton">検索</button>
-
 <input
-id="search"
+id="jpSearch"
 type="text"
-placeholder="検索"
+placeholder="日本語で検索"
 autofocus
 >
+
+<input
+id="mnSearch"
+type="text"
+placeholder="モンゴル語で検索"
+>
+
+<button id="searchButton">検索</button>
 
 </div>
 
@@ -147,7 +153,8 @@ autofocus
 
 <script>
 
-const searchBox = document.getElementById("search");
+const jpSearchBox = document.getElementById("jpSearch");
+const mnSearchBox = document.getElementById("mnSearch");
 const results = document.getElementById("results");
 
 let corpus = [];
@@ -212,32 +219,37 @@ showResults();
 
 document.getElementById("searchButton").addEventListener("click", function(){
 
-const word = searchBox.value.trim().toLowerCase();
+const jpWord = jpSearchBox.value.trim().toLowerCase();
+const mnWord = mnSearchBox.value.trim().toLowerCase();
 
 displayCount = 15;
 
-if(word === ""){
+if(jpWord === "" && mnWord === ""){
 
 filteredResults = [];
-
 results.innerHTML = "";
 
 return;
 
 }
 
-filteredResults = corpus.filter(item =>
+filteredResults = corpus.filter(item => {
 
-String(item.issue).includes(word) ||
-String(item.number).includes(word) ||
-String(item.jp).toLowerCase().includes(word) ||
-String(item.mn).toLowerCase().includes(word)
+const jpText = String(item.jp || "").toLowerCase();
+const mnText = String(item.mn || "").toLowerCase();
 
-);
+const jpMatch = jpWord === "" || jpText.includes(jpWord);
+const mnMatch = mnWord === "" || mnText.includes(mnWord);
+
+return jpMatch && mnMatch;
+
+});
 
 showResults();
 
 });
+[jpSearchBox, mnSearchBox].forEach(searchBox => {
+
 searchBox.addEventListener("keydown", function(event){
 
 if(event.key === "Enter"){
@@ -245,6 +257,8 @@ if(event.key === "Enter"){
 document.getElementById("searchButton").click();
 
 }
+
+});
 
 });
   
