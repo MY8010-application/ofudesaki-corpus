@@ -120,7 +120,12 @@ font-size:16px;
 .mn{
 font-size:14px;
 }
-
+  
+.highlight{
+background:yellow;
+color:#000;
+font-weight:bold;
+}
 }
 </style>
 
@@ -161,6 +166,18 @@ let corpus = [];
 let filteredResults = [];
 let displayCount = 15;
 
+function highlightText(text, word){
+
+if(!word) return text;
+
+const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const regex = new RegExp(`(${escapedWord})`, "gi");
+
+return text.replace(regex, '<span class="highlight">$1</span>');
+
+}
+  
 fetch("corpus.json")
 .then(response => {
 
@@ -190,9 +207,9 @@ results.innerHTML += `
 
 <div>号：${item.issue}　首：${item.number}</div>
 
-<div class="jp">${item.jp}</div>
+<div class="jp">${highlightText(item.jp, jpSearchBox.value.trim())}</div>
 
-<div class="mn">${item.mn}</div>
+<div class="mn">${highlightText(item.mn, mnSearchBox.value.trim())}</div>
 
 </div>
 `;
